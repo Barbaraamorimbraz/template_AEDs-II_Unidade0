@@ -1,4 +1,6 @@
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Produto {
 	
@@ -64,8 +66,15 @@ public abstract class Produto {
      */
     @Override
     public boolean equals(Object obj) {
-        return false;
+     try{
+          Produto outro = (Produto) obj;
+          return this.descricao.equals(outro.descricao);
+     }
+     catch(ClassCastException e){
+          return false;
+     } 
     }
+    
 
 	/**
      * Cria um produto a partir de uma linha de dados em formato texto. A linha de dados deve estar de acordo com a formatação
@@ -75,8 +84,30 @@ public abstract class Produto {
      * @return Um produto com os dados recebidos
      */
     static Produto criarDoTexto(String linha) {
-    	return null;
-    }
+          String[] dadosLinha;
+          int tipo;
+          String descricao;
+          double precoCusto, margemLucro;
+          LocalDate dataDeValidade;
+          Produto produto;
+
+          dadosLinha = linha.split(";");
+          tipo = Integer.parseInt(dadosLinha[0]);
+          descricao = dadosLinha[1];
+          precoCusto = Double.parseDouble(dadosLinha[2].replace(",", "."));
+          margemLucro = Double.parseDouble(dadosLinha[3].replace(",", "."));
+
+          if (tipo == 2) {
+               DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+               dataDeValidade = LocalDate.parse(dadosLinha[4], formatoData);
+               produto = new ProdutoPerecivel(descricao, precoCusto, margemLucro, dataDeValidade);
+          } 
+          else {
+               produto = new ProdutoNaoPerecivel(descricao, precoCusto, margemLucro);
+          }
+
+          return produto;
+     }
     	
     /**
      * Gera uma linha de texto a partir dos dados do produto.

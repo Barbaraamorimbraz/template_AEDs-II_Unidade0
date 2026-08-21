@@ -1,5 +1,6 @@
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class ProdutoPerecivel extends Produto {
@@ -10,6 +11,15 @@ public class ProdutoPerecivel extends Produto {
 
     public ProdutoPerecivel(String desc, double precoCusto, double margemLucro, LocalDate validade) {
         super(desc, precoCusto, margemLucro);
+
+        if (validade == null || validade.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Data de validade não pode ser anterior ao dia de hoje.");
+        }
+        this.dataDeValidade = validade;
+    }
+
+    public ProdutoPerecivel(String desc, double precoCusto, LocalDate validade) {
+        super(desc, precoCusto);
 
         if (validade == null || validade.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Data de validade não pode ser anterior ao dia de hoje.");
@@ -34,16 +44,25 @@ public class ProdutoPerecivel extends Produto {
         return valor;
     }
 
+    /**
+     * Gera uma linha de texto a partir dos dados do produto. Preço e margem de lucro são formatados com 2 casas decimais.
+     * Data de validade é formatada no formato dd/mm/aaaa
+     * @return Uma string no formato "2;descrição;preçoDeCusto;margemDeLucro;dataDeValidade"
+     */
+	@Override
+    public String gerarDadosTexto() {
+		return null;
+	}
+
     @Override
     public String toString() {
 
-        NumberFormat moeda = NumberFormat.getCurrencyInstance();
-
-        try {
-            return String.format("NOME: " + getDescricao() + ": " + moeda.format(valorVenda()));
-        } catch (IllegalStateException e) {
-            return String.format("NOME: " + getDescricao() + ": PRODUTO VENCIDO (validade: " + dataDeValidade + ")");
-        }
+       DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
+        String dados = super.toString();
+        dados += "\nVálido até " + formato.format(dataDeValidade);
+        
+        return dados;
     }
 
 }

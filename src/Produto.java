@@ -56,6 +56,34 @@ public abstract class Produto {
      * @return Valor de venda do produto (double, positivo)
      */
 	public abstract double valorVenda();
+
+	/**
+     * Igualdade de produtos: caso possuam o mesmo nome/descrição. 
+     * @param obj Outro produto a ser comparado 
+     * @return booleano true/false conforme o parâmetro possua a descrição igual ou não a este produto.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return false;
+    }
+
+	/**
+     * Cria um produto a partir de uma linha de dados em formato texto. A linha de dados deve estar de acordo com a formatação
+     * "tipo;descrição;preçoDeCusto;margemDeLucro;[dataDeValidade]"
+     * ou o funcionamento não será garantido. Os tipos são 1, para produto não perecível; e 2, para perecível.
+     * @param linha Linha com os dados do produto a ser criado.
+     * @return Um produto com os dados recebidos
+     */
+    static Produto criarDoTexto(String linha) {
+    	return null;
+    }
+    	
+    /**
+     * Gera uma linha de texto a partir dos dados do produto.
+     * @return Uma string no formato "tipo;descrição;preçoDeCusto;margemDeLucro;[dataDeValidade]"
+     */
+    public abstract String gerarDadosTexto();
+
 	/**
      * Descrição, em string, do produto, contendo sua descrição e o valor de venda.
      *  @return String com o formato:
